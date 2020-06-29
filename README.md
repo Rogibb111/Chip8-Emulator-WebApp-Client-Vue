@@ -1,4 +1,4 @@
-# client
+# Chip8-Emulator-WebApp-Client-Vue
 
 ## Project setup
 ```
