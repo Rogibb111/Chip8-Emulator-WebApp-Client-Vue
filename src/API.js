@@ -44,7 +44,7 @@ export function startSocket(frameCallback, soundCallback, id) {
     });
 }
 
-export function pressKey(keyboard, id) {
+export function updateKeyboard(keyboard, id) {
     if (socket) {
         socket.send(JSON.stringify({
             type: 'keyPress',

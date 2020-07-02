@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-on:keydown="onKeyDown" v-on:keyup="onKeyUp">
     <Screen v-bind:screen="screen" v-bind:keyboard="keyboard"/>
     <Settings
             v-bind:game="game"
@@ -16,7 +16,7 @@
 <script>
 import Screen from './components/screen.vue'
 import Settings from './components/settings.vue';
-import { getGames, startGame, stopGame } from './API.js';
+import { getGames, startGame, stopGame, startSocket, updateKeyboard } from './API.js';
 
 let store = {
   screen: [],
@@ -50,6 +50,26 @@ export default {
     async onStartGame() {
       const {game, frequency} = store;
       this.id = await startGame(game, frequency);
+      startSocket(this.onNewFrame, this.onSound, this.id);
+    },
+    onNewFrame(screen){
+      this.screen = screen;
+    },
+    onSound(sound) {
+    },
+    onKeyDown({ keyCode }) {
+      if (!this.keyboard.includes(keyCode)) {
+        this.keyboard.push(keyCode);
+      }
+      updateKeyboard(this.keyboard);
+    },
+    onKeyUp({ keyCode }) {
+      if (this.keyboard.includes(keyCode)) {
+        const index = this.keyboard.indexOf(keyCode);
+
+        this.keyboard.splice(index, 1);
+        updateKeyboard(this.keyboard);
+      }
     },
     onStopGame() {
       stopGame(this.id);
