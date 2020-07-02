@@ -14,9 +14,10 @@
 
 <script>
     export default {
-        name: "screen",
+        name: "Screen",
         props: {
-            screen: [Object]
+            screen: Array,
+            keyboard: Array
         }
     }
 </script>
