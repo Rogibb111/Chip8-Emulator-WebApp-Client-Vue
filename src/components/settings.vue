@@ -11,13 +11,24 @@
         </md-field>
         <md-field class="frequency-select">
             <md-select v-model="selectedFrequency" name="selectedFrequency" id="selectedFrequency" placeholder="Select Frequency">
-                <md-option value=1000>1000 HZ</md-option>
-                <md-option value=2000>2000 HZ</md-option>
-                <md-option value=3000>3000 HZ</md-option>
-                <md-option value=4000>4000 HZ</md-option>
+                <md-option value="1">1 Hz</md-option>
+                <md-option value="5">5 Hz</md-option>
+                <md-option value="10">10 Hz</md-option>
+                <md-option value="20">20 Hz</md-option>
+                <md-option value="25">25 Hz</md-option>
+                <md-option value="30">30 Hz</md-option>
+                <md-option value="35">35 Hz</md-option>
+                <md-option value="40">40 Hz</md-option>
+                <md-option value="45">45 Hz</md-option>
+                <md-option value="50">50 Hz</md-option>
+                <md-option value="100">100 Hz</md-option>
+                <md-option value="200">200 Hz</md-option>
+                <md-option value="300">300 Hz</md-option>
+                <md-option value="400">400 Hz</md-option>
+                <md-option value="500">500 Hz</md-option>
             </md-select>
         </md-field>
-        <md-button class="md-raised md-primary">{{ gameAction }}</md-button>
+        <md-button class="md-raised md-primary" v-on:click="gameActionClick">{{ gameAction }}</md-button>
         <md-button class="md-raised md-accent">Pause</md-button>
     </div>
 </template>
@@ -39,6 +50,15 @@
         computed: {
             gameAction() {
                 return this.isRunning ? 'Stop' : 'Start';
+            }
+        },
+        methods: {
+            gameActionClick() {
+                if (this.isRunning) {
+                    this.$emit('stop-game');
+                } else {
+                    this.$emit('start-game');
+                }
             }
         }
     }

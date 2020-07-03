@@ -9,6 +9,9 @@ export async function getGames() {
 export async function startGame(fileName, frequency) {
     const response = await fetch('http://localhost:8080/start', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             fileName,
             frequency
@@ -26,6 +29,9 @@ export async function stopGame(id) {
         })
     });
 
+    socket.close();
+    socket = null;
+
     return response.json();
 }
 
@@ -34,12 +40,12 @@ export function startSocket(frameCallback, soundCallback, id) {
     socket.addEventListener('open', () => {
        socket.send(JSON.stringify({ id, type: 'init' }));
     });
-    socket.addEventListener('message', (jsonData) => {
-        const data = JSON.parse(jsonData);
+    socket.addEventListener('message', (msg) => {
+        const data = JSON.parse(msg.data);
         if (data.type === 'frame') {
-            frameCallback(data);
+            frameCallback(data.screen);
         } else if (data.type === 'sound') {
-            soundCallback(data);
+            soundCallback(data.sound);
         }
     });
 }
@@ -53,9 +59,4 @@ export function updateKeyboard(keyboard, id) {
             timeStamp: new Date()
         }));
     }
-}
-
-export function stopSocket() {
-    socket.close();
-    socket = null;
 }

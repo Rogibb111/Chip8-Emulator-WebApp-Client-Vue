@@ -16,8 +16,7 @@
     export default {
         name: "Screen",
         props: {
-            screen: Array,
-            keyboard: Array
+            screen: Array
         }
     }
 </script>
