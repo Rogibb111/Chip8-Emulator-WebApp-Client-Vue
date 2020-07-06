@@ -117,6 +117,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
+  width: 60%;
+  display: flex;
+  margin: 0 auto;
+  flex-flow: column nowrap;
 }
 </style>
