@@ -16,7 +16,7 @@
 <script>
 import Screen from './components/screen.vue'
 import Settings from './components/settings.vue';
-import { getGames, startGame, stopGame, startSocket, updateKeyboard } from './API.js';
+import { getGames, startGame, stopGame, startSocket, updateKeyboard } from './services/API.js';
 
 let oscillator = null;
 let soundTimeoutId = null;
@@ -44,14 +44,17 @@ export default {
   },
   methods: {
     onSelectGame(game) {
-      store.game = game;
+      this.game = game;
     },
     onSelectFrequency(frequency) {
-      store.frequency = frequency;
+      this.frequency = frequency;
     },
-    async onStartGame() {
-      const {game, frequency} = store;
-      this.id = await startGame(game, frequency);
+    async onStartGame({ game, frequency }) {
+      const idPayload = await startGame(game, frequency);
+      this.id = idPayload.id;
+      this.game = game;
+      this.frequency = frequency;
+      this.isRunning = true;
       startSocket(this.onNewFrame, this.onSound, this.id);
     },
     onNewFrame(rawScreen){
@@ -59,11 +62,7 @@ export default {
 
       for (let y = 0; y < rawScreen.length; y += 1) {
         for (let x = 0; x < rawScreen[y].length; x += 1) {
-          const currentPixel = this.screen[y + rawScreen.length * x];
-
-          if (!currentPixel || rawScreen[y][x] !== currentPixel.value) {
             screen[y + rawScreen.length * x] = { x, y, value: rawScreen[y][x]}
-          }
         }
       }
 
@@ -104,6 +103,8 @@ export default {
     },
     onStopGame() {
       stopGame(this.id);
+      this.isRunning = false;
+      this.screen = [];
     }
   }
 }

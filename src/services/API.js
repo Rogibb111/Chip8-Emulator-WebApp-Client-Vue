@@ -6,14 +6,14 @@ export async function getGames() {
     return response.json();
 }
 
-export async function startGame(fileName, frequency) {
+export async function startGame(filename, frequency) {
     const response = await fetch('http://localhost:8080/start', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            fileName,
+            filename,
             frequency
         })
     });
@@ -22,8 +22,11 @@ export async function startGame(fileName, frequency) {
 }
 
 export async function stopGame(id) {
-    const response = await fetch('http://localhost:8080/stop', {
+    await fetch('http://localhost:8080/stop', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             id
         })
@@ -31,12 +34,10 @@ export async function stopGame(id) {
 
     socket.close();
     socket = null;
-
-    return response.json();
 }
 
 export function startSocket(frameCallback, soundCallback, id) {
-    const socket = new WebSocket('ws://localhost:8080');
+    socket = new WebSocket('ws://localhost:8080/screen');
     socket.addEventListener('open', () => {
        socket.send(JSON.stringify({ id, type: 'init' }));
     });
