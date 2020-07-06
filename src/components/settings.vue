@@ -57,8 +57,16 @@
                 if (this.isRunning) {
                     this.$emit('stop-game');
                 } else {
-                    this.$emit('start-game');
+                    this.$emit('start-game', { game: this.selectedGame, frequency: this.selectedFrequency });
                 }
+            }
+        },
+        watch: {
+            selectedGame(game) {
+                this.$emit('select-game', game);
+            },
+            selectedFrequency(frequency) {
+                this.$emit('select-frequency', frequency);
             }
         }
     }
