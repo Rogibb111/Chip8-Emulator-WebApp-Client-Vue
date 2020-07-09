@@ -37,18 +37,20 @@ export async function stopGame(id) {
 }
 
 export function startSocket(frameCallback, soundCallback, id) {
-    socket = new WebSocket('ws://localhost:8080/screen');
-    socket.addEventListener('open', () => {
-       socket.send(JSON.stringify({ id, type: 'init' }));
-    });
-    socket.addEventListener('message', (msg) => {
-        const data = JSON.parse(msg.data);
-        if (data.type === 'frame') {
-            frameCallback(data.screen);
-        } else if (data.type === 'sound') {
-            soundCallback(data.sound);
-        }
-    });
+    if (socket === null) {
+        socket = new WebSocket('ws://localhost:8080/screen');
+        socket.addEventListener('open', () => {
+            socket.send(JSON.stringify({ id, type: 'init' }));
+        });
+        socket.addEventListener('message', (msg) => {
+            const data = JSON.parse(msg.data);
+            if (data.type === 'frame') {
+                frameCallback(data.screen);
+            } else if (data.type === 'sound') {
+                soundCallback(data.sound);
+            }
+        });
+    }
 }
 
 export function updateKeyboard(keyboard, id) {
